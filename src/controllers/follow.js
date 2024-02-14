@@ -1,5 +1,4 @@
 const Follow = require('../models/Follow');
-const User = require('../models/User');
 const mongoosePagiante = require('mongoose-pagination');
 const ValidateFollow = require('../validations/follow');
 

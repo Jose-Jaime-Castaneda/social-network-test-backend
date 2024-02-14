@@ -1,4 +1,5 @@
 const Publication = require('../models/Publication');
+const mongoosePagiante = require('mongoose-pagination');
 
 const createPublication = async (req, res) => {
     try {
@@ -80,9 +81,15 @@ const getPublications = async (req, res) => {
         const currentUser = req.user.id;
         if (!currentUser) throw new Error('No se detecto ningún usuario autenticado');
 
+        let page = 1;
+        if (req.params.page) page = req.params.page;
+        const itemsPerPage = 4;
+        const total = await Publication.countDocuments({ user: currentUser });
+
         const publications = await Publication.find({ user: currentUser })
-        .populate('user', '-_id -email -password -role -date -__v')
-        .select('-__v');
+            .populate('user', '-_id -email -password -role -date -__v')
+            .select('-__v')
+            .paginate(page, itemsPerPage);
         if (!publications || Object.keys(publications).length === 0) throw new Error('No has publicado nada pai');
 
 
@@ -90,6 +97,10 @@ const getPublications = async (req, res) => {
             status: 'success',
             message: 'Publicaciones obtenidas correctamente',
             publications: publications,
+            page: page,
+            totalItems: total,
+            itemsPerPage: itemsPerPage,
+            totalPages: Math.ceil(total / itemsPerPage),
         })
 
     } catch (error) {
