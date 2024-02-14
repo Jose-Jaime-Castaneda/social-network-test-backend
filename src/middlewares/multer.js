@@ -13,4 +13,19 @@ const storage = multer.diskStorage({
 
 const uploads = multer({ storage });
 
-module.exports = uploads;
+const storagePublication = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const destinationPath = path.join(__dirname, "../uploads/publications/");
+        cb(null, destinationPath);
+    },
+    filename: (req, file, cb) => {
+        cb(null, "avatar-" + Date.now() + "-" + file.originalname);
+    }
+});
+
+const uploadPublications = multer({ storagePublication });
+
+module.exports = {
+    uploads,
+    uploadPublications,
+};
