@@ -75,8 +75,35 @@ const remove = async (req, res) => {
     }
 }
 
+const getPublications = async (req, res) => {
+    try {
+        const currentUser = req.user.id;
+        if (!currentUser) throw new Error('No se detecto ningún usuario autenticado');
+
+        const publications = await Publication.find({ user: currentUser })
+        .populate('user', '-_id -email -password -role -date -__v')
+        .select('-__v');
+        if (!publications || Object.keys(publications).length === 0) throw new Error('No has publicado nada pai');
+
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Publicaciones obtenidas correctamente',
+            publications: publications,
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            status: 'error',
+            message: 'Hubo un error al obtener las publicaciones',
+            error: error.message,
+        })
+    }
+}
+
 module.exports = {
     createPublication,
     detail,
     remove,
+    getPublications,
 }
