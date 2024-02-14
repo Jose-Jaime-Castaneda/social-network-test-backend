@@ -78,8 +78,12 @@ const remove = async (req, res) => {
 
 const getPublications = async (req, res) => {
     try {
-        const currentUser = req.user.id;
-        if (!currentUser) throw new Error('No se detecto ningún usuario autenticado');
+        let currentUser = req.user.id;
+        if (!currentUser && !req.params.id) {
+            throw new Error('No se detecto ningún usuario autenticado o un ID de usuario');
+        } else if (req.params.id) {
+            currentUser = req.params.id;
+        }
 
         let page = 1;
         if (req.params.page) page = req.params.page;
