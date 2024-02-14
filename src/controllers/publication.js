@@ -1,0 +1,82 @@
+const Publication = require('../models/Publication');
+
+const createPublication = async (req, res) => {
+    try {
+        const userID = req.user.id;
+        if (!userID) throw new Error('No se detecto usuario autenticado');
+
+        const info = req.body;
+        if (!info || Object.keys(info).length === 0) throw new Error('No se mandaron los datos necesarios');
+
+        let newPublication = new Publication(info);
+        newPublication.user = userID;
+
+        const response = await newPublication.save();
+        if (!response) throw new Error('No se pudo guardar la publicación');
+
+        res.status(201).json({
+            status: 'success',
+            message: 'Publicacion creada correctamente',
+            publication: response,
+        })
+
+    } catch (error) {
+        res.status(402).json({
+            status: 'error',
+            message: 'Ocurrió un error al intentar crear la publicacion',
+            error: error.message
+        })
+    }
+}
+
+const detail = async (req, res) => {
+    try {
+        const id = req.params.id;
+        if (!id) throw new Error('No se detecto un ID de publicación');
+
+        const publication = await Publication.findOne({ _id: id });
+        if (!publication) throw new Error('No se encontró una publicación con ese ID');
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Detalle obtenido correctamente',
+            publication: publication,
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            status: 'error',
+            message: 'Hubo un error al intentar obtener el detalle',
+            error: error.message,
+        })
+    }
+}
+
+const remove = async (req, res) => {
+    try {
+        const id = req.params.id;
+        if (!id) throw new Error('No se detecto un ID de publicación');
+
+        const publication = await Publication.findOneAndDelete({ _id: id });
+        if (!publication) throw new Error('No se encontró una publicación con ese ID');
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Publicación eliminada correctamente',
+            publication: publication,
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            status: 'error',
+            message: 'Hubo un error al intentar eliminar la publicación',
+            error: error.message,
+        })
+    }
+}
+
+module.exports = {
+    createPublication,
+    detail,
+    remove,
+}
