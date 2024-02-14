@@ -94,7 +94,7 @@ const getPublications = async (req, res) => {
             .populate('user', '-_id -email -password -role -date -__v')
             .select('-__v')
             .paginate(page, itemsPerPage);
-        if (!publications || Object.keys(publications).length === 0) throw new Error('No has publicado nada pai');
+        if (!publications || Object.keys(publications).length === 0) throw new Error('No se encontraron publicaciones');
 
 
         res.status(200).json({
