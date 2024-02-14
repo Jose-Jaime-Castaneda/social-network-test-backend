@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middlewares/auth');
-const uploads = require('../middlewares/multer');
+const { uploads } = require('../middlewares/multer');
 
 // Importar controladores
 const userController = require('../controllers/user');
