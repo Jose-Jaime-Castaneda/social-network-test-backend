@@ -70,11 +70,16 @@ const validateLogin = async (email, pwd) => {
     }
 }
 
-const validateImgExtension = async (extension) => {
-    if (extension !== "png" && extension !== "jpg" && extension !== "jpeg") {
+const validateImgExtension = async (extension, filePath) => {
+    if (!["png", "jpg", "jpeg"].includes(extension.toLowerCase())) {
+        
+        try {
+            await fs.unlink(filePath);
+        }
+        catch (error) {
+            console.error('Error al eliminar el archivo:', error);
+        }
 
-        const filePath = req.file.path;
-        const fileDeleted = fs.unlink(filePath);
         return {
             status: 'error',
             message: 'El archivo no tiene ningúna extensión válida PNG, JPG, JPEG',

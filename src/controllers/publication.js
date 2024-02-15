@@ -121,16 +121,19 @@ const getPublications = async (req, res) => {
 
 const uploadImg = async (req, res) => {
     try {
+        const publicationID = req.params.id;
+        if(!publicationID) throw new Error('No se detecto una publicación para actualizar');
+
         if (!req.file) throw new Error('No se detecto ninguna imagen');
 
         let extension = req.file.mimetype.split("/")[1];
 
-        let validationStatus = await ValidateImg.validateImgExtension(extension);
+        let validationStatus = await ValidateImg.validateImgExtension(extension, req.file.path);
         if (validationStatus.status === 'error') throw new Error(validationStatus.message);
 
         const uploadImage = await Publication.findOneAndUpdate(
-            { _id: req.user.id },
-            { image: req.file.filename },
+            { user: req.user.id, _id: publicationID },
+            { file: req.file.filename },
             { new: true }
         );
         if (!uploadImage) throw new Error('No se pudo subir la imagen, valió');
@@ -138,7 +141,7 @@ const uploadImg = async (req, res) => {
         res.status(200).json({
             status: 'success',
             message: 'Imagen de usuario subida correctamente',
-            user: uploadImage,
+            publication: uploadImage,
         })
 
     } catch (error) {

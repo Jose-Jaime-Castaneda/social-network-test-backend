@@ -184,7 +184,7 @@ const uploadImg = async (req, res) => {
 
         let extension = req.file.mimetype.split("/")[1];
 
-        let validationStatus = await ValidateUser.validateImgExtension(extension);
+        let validationStatus = await ValidateUser.validateImgExtension(extension, req.file.path);
         if (validationStatus.status === 'error') throw new Error(validationStatus.message);
 
         const uploadImage = await User.findOneAndUpdate(

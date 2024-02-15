@@ -10,7 +10,6 @@ const storage = multer.diskStorage({
         cb(null, "avatar-" + Date.now() + "-" + file.originalname);
     }
 });
-
 const uploads = multer({ storage });
 
 const storagePublication = multer.diskStorage({
@@ -19,11 +18,10 @@ const storagePublication = multer.diskStorage({
         cb(null, destinationPath);
     },
     filename: (req, file, cb) => {
-        cb(null, "avatar-" + Date.now() + "-" + file.originalname);
+        cb(null, "publication-" + Date.now() + "-" + file.originalname);
     }
 });
-
-const uploadPublications = multer({ storagePublication });
+const uploadPublications = multer({ storage: storagePublication });
 
 module.exports = {
     uploads,
