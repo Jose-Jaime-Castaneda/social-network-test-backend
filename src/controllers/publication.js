@@ -1,5 +1,7 @@
 const Publication = require('../models/Publication');
 const mongoosePagiante = require('mongoose-pagination');
+const ValidateImg = require('../validations/user');
+const fs = require('fs');
 
 const createPublication = async (req, res) => {
     try {
@@ -117,9 +119,63 @@ const getPublications = async (req, res) => {
     }
 }
 
+const uploadImg = async (req, res) => {
+    try {
+        if (!req.file) throw new Error('No se detecto ninguna imagen');
+
+        let extension = req.file.mimetype.split("/")[1];
+
+        let validationStatus = await ValidateImg.validateImgExtension(extension);
+        if (validationStatus.status === 'error') throw new Error(validationStatus.message);
+
+        const uploadImage = await Publication.findOneAndUpdate(
+            { _id: req.user.id },
+            { image: req.file.filename },
+            { new: true }
+        );
+        if (!uploadImage) throw new Error('No se pudo subir la imagen, valió');
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Imagen de usuario subida correctamente',
+            user: uploadImage,
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            status: 'error',
+            message: 'Hubo un error al subir la imagen de usuario',
+            error: error.message,
+        })
+    }
+}
+
+const getImgProfile = async (req, res) => {
+    try {
+        const file = req.params.file;
+        if (!file) throw new Error('No se detecto un nombre de imagen');
+
+        const filePath = path.join(__dirname, "../uploads/publications/" + file);
+        const exists = await fs.promises.stat(filePath);
+        if (!exists) throw new Error('Archivo no encontrado');
+
+        res.sendFile(path.resolve(filePath));
+
+    } catch (error) {
+        res.status(400).json({
+            status: 'error',
+            message: 'Hubo un error al obtener la imagen de perfil',
+            error: error.message,
+        })
+    }
+}
+
+
 module.exports = {
     createPublication,
     detail,
     remove,
     getPublications,
+    uploadImg,
+    getImgProfile,
 }
