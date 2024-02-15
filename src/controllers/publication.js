@@ -195,9 +195,9 @@ const getPublications = async (req, res) => {
             message: 'Publicaciones (feed) obtenidas correctamente',
             publications: publications,
             page: page,
-            total: total,
-            itemsPerPage: itemsPerPage,
             totalPages: Math.ceil(total / itemsPerPage),
+            itemsPerPage: itemsPerPage,
+            total: total,
         })
 
     } catch (error) {
