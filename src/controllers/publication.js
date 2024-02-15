@@ -79,7 +79,7 @@ const remove = async (req, res) => {
     }
 }
 
-const getPublications = async (req, res) => {
+const getUserPublications = async (req, res) => {
     try {
         let currentUser = req.user.id;
         if (!currentUser && !req.params.id) {
@@ -178,7 +178,7 @@ module.exports = {
     createPublication,
     detail,
     remove,
-    getPublications,
+    getUserPublications,
     uploadImg,
     getImgPublication,
 }

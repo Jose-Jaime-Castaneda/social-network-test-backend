@@ -8,7 +8,7 @@ const publicationController = require('../controllers/publication');
 
 // Rutas GET ALL
 router.get('/detail/:id', auth.auth, publicationController.detail);
-router.get('/publications/:id?/:page?', auth.auth, publicationController.getPublications);
+router.get('/publications/:id?/:page?', auth.auth, publicationController.getUserPublications);
 router.get('/get-img/:file', auth.auth, publicationController.getImgPublication);
 // Rutas POST
 router.post('/create', auth.auth, publicationController.createPublication);
