@@ -2,6 +2,7 @@ const Publication = require('../models/Publication');
 const mongoosePagiante = require('mongoose-pagination');
 const ValidateImg = require('../validations/user');
 const fs = require('fs');
+const path = require('path');
 
 const createPublication = async (req, res) => {
     try {
@@ -153,7 +154,7 @@ const uploadImg = async (req, res) => {
     }
 }
 
-const getImgProfile = async (req, res) => {
+const getImgPublication = async (req, res) => {
     try {
         const file = req.params.file;
         if (!file) throw new Error('No se detecto un nombre de imagen');
@@ -173,12 +174,11 @@ const getImgProfile = async (req, res) => {
     }
 }
 
-
 module.exports = {
     createPublication,
     detail,
     remove,
     getPublications,
     uploadImg,
-    getImgProfile,
+    getImgPublication,
 }
