@@ -91,6 +91,7 @@ const getPublications = async (req, res) => {
         const total = await Publication.countDocuments({ user: currentUser });
 
         const publications = await Publication.find({ user: currentUser })
+            .sort('-create_at')
             .populate('user', '-_id -email -password -role -date -__v')
             .select('-__v')
             .paginate(page, itemsPerPage);
