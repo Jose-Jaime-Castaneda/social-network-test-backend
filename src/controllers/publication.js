@@ -3,6 +3,7 @@ const mongoosePagiante = require('mongoose-pagination');
 const ValidateImg = require('../validations/user');
 const fs = require('fs');
 const path = require('path');
+const { error } = require('console');
 
 const createPublication = async (req, res) => {
     try {
@@ -123,7 +124,7 @@ const getUserPublications = async (req, res) => {
 const uploadImg = async (req, res) => {
     try {
         const publicationID = req.params.id;
-        if(!publicationID) throw new Error('No se detecto una publicación para actualizar');
+        if (!publicationID) throw new Error('No se detecto una publicación para actualizar');
 
         if (!req.file) throw new Error('No se detecto ninguna imagen');
 
@@ -174,6 +175,40 @@ const getImgPublication = async (req, res) => {
     }
 }
 
+const getPublications = async (req, res) => {
+    try {
+        let page = 1;
+        if (req.params.page) page = req.params.page;
+        page = parseInt(page);
+
+        const itemsPerPage = 4;
+        const total = await Publication.countDocuments();
+
+        const publications = await Publication.find()
+            .sort({ create_at: -1 })
+            .select('text user file')
+            .paginate(page, itemsPerPage);
+        if (!publications || Object.keys(publications).length === 0) throw new Error('No hay publicaciones para mostrar');
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Publicaciones (feed) obtenidas correctamente',
+            publications: publications,
+            page: page,
+            total: total,
+            itemsPerPage: itemsPerPage,
+            totalPages: Math.ceil(total / itemsPerPage),
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            status: 'error',
+            message: 'Hubo un error al obtener las publicaciones',
+            error: error.message,
+        })
+    }
+}
+
 module.exports = {
     createPublication,
     detail,
@@ -181,4 +216,5 @@ module.exports = {
     getUserPublications,
     uploadImg,
     getImgPublication,
+    getPublications,
 }
