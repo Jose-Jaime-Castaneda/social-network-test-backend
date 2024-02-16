@@ -226,7 +226,9 @@ const getFeed = async (req, res) => {
 
         let publications = await Publication.find({
             user: followedIds
-        });
+        }).populate('user', '-_id -email -password -role -date -__v')
+            .select('-__v')
+            .paginate(page, itemsPerPage);
         if (publications.length === 0) throw new Error('La gente que sigues no ha publicado nada o hubo un error');
 
         res.status(200).json({
