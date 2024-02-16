@@ -11,6 +11,7 @@ router.get('/detail/:id', auth.auth, publicationController.detail);
 router.get('/publications/:id?/:page?', auth.auth, publicationController.getUserPublications);
 router.get('/get-img/:file', auth.auth, publicationController.getImgPublication);
 router.get('/all-publications/:page?', auth.auth, publicationController.getPublications);
+router.get('/feed/:page?', auth.auth, publicationController.getFeed);
 // Rutas POST
 router.post('/create', auth.auth, publicationController.createPublication);
 router.post('/uploadImg/:id', [auth.auth, uploadPublications.single('file1')], publicationController.uploadImg);

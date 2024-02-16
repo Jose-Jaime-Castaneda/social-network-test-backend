@@ -1,9 +1,9 @@
 const Publication = require('../models/Publication');
+const Follow = require('../models/Follow');
 const mongoosePagiante = require('mongoose-pagination');
 const ValidateImg = require('../validations/user');
 const fs = require('fs');
 const path = require('path');
-const { error } = require('console');
 
 const createPublication = async (req, res) => {
     try {
@@ -192,7 +192,7 @@ const getPublications = async (req, res) => {
 
         res.status(200).json({
             status: 'success',
-            message: 'Publicaciones (feed) obtenidas correctamente',
+            message: 'Publicaciones obtenidas correctamente',
             publications: publications,
             page: page,
             totalPages: Math.ceil(total / itemsPerPage),
@@ -209,6 +209,42 @@ const getPublications = async (req, res) => {
     }
 }
 
+const getFeed = async (req, res) => {
+    try {
+        const currentUser = req.user.id;
+        if (!currentUser) throw new Error('No se detecto un usuario autenticado');
+
+        let page = 1;
+        if (req.params.page) page = req.params.page;
+        page = parseInt(page);
+        itemsPerPage = 4;
+
+        let follows = await Follow.find({ "user": currentUser }).select('followed');
+        if (follows.length === 0) throw new Error('Hubo un error obteniendo la lista de seguidos');
+
+        const followedIds = follows.map(follow => follow.followed);
+
+        let publications = await Publication.find({
+            user: followedIds
+        });
+        if (publications.length === 0) throw new Error('La gente que sigues no ha publicado nada o hubo un error');
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Publicaciones obtenidas correctamente para la feed',
+            publicaciones: publications,
+            follows: followedIds,
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            status: 'error',
+            message: 'Hubo un error al obtener las publicaciones para la feed',
+            error: error.message,
+        })
+    }
+}
+
 module.exports = {
     createPublication,
     detail,
@@ -217,4 +253,5 @@ module.exports = {
     uploadImg,
     getImgPublication,
     getPublications,
+    getFeed,
 }
