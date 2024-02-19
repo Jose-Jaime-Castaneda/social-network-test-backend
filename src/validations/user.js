@@ -45,7 +45,7 @@ const validateExistingUser = async (nick, email) => {
 
 const validateLogin = async (email, pwd) => {
     const existingUser = await User.findOne({
-        email: email.toLowerCase()
+        email: email
     }).exec();
 
     if (existingUser) {

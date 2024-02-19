@@ -56,6 +56,7 @@ const createUser = async (req, res) => {
 const login = async (req, res) => {
     try {
         const params = req.body;
+        console.log(params);
         let validateUser = await ValidateUser.validateLogin(params.email, params.password);
         if (validateUser.status === 'error') throw new Error(validateUser.message);
 
@@ -63,7 +64,7 @@ const login = async (req, res) => {
         const token = jwt.createToken(validateUser.user);
 
         res.status(200).json({
-            satus: 'success',
+            status: 'success',
             message: validateUser.message,
             token: token
         })
@@ -219,7 +220,7 @@ const getImgProfile = async (req, res) => {
         if (!exists) throw new Error('Archivo no encontrado');
 
         res.sendFile(path.resolve(filePath));
-        
+
     } catch (error) {
         res.status(400).json({
             status: 'error',
