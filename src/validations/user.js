@@ -45,7 +45,8 @@ const validateExistingUser = async (nick, email) => {
 
 const validateLogin = async (email, pwd) => {
     const existingUser = await User.findOne({
-        email: email
+        $or:
+            [{ email: email }, { nick: email }]
     }).exec();
 
     if (existingUser) {
@@ -65,14 +66,14 @@ const validateLogin = async (email, pwd) => {
     } else {
         return {
             status: 'error',
-            message: 'No existen usuarios con ese email',
+            message: 'No existen usuarios con ese email o nickname',
         };
     }
 }
 
 const validateImgExtension = async (extension, filePath) => {
     if (!["png", "jpg", "jpeg"].includes(extension.toLowerCase())) {
-        
+
         try {
             await fs.unlink(filePath);
         }

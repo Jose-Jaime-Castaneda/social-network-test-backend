@@ -56,7 +56,7 @@ const createUser = async (req, res) => {
 const login = async (req, res) => {
     try {
         const params = req.body;
-        console.log(params);
+        //console.log(params);
         let validateUser = await ValidateUser.validateLogin(params.email, params.password);
         if (validateUser.status === 'error') throw new Error(validateUser.message);
 
