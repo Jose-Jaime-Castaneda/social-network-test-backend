@@ -242,6 +242,9 @@ const getFeed = async (req, res) => {
             publicaciones: publications,
             follows: followedIds,
             total: total,
+            paginas: Math.ceil(total/itemsPerPage),
+            ppp: itemsPerPage,
+            pagina: page,
         })
 
     } catch (error) {
