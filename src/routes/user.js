@@ -10,7 +10,7 @@ const userController = require('../controllers/user');
 router.get('/prueba', auth.auth, userController.rutaPrueba);
 router.get('/profile/:id', auth.auth, userController.getUserInfo);
 router.get('/users/:page?', auth.auth, userController.getUserList);
-router.get('/profileImg/:file', auth.auth, userController.getImgProfile);
+router.get('/profileImg/:file', userController.getImgProfile);
 // Rutas POST
 router.post('/create', userController.createUser);
 router.post('/login', userController.login);

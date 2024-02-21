@@ -217,7 +217,7 @@ const getFeed = async (req, res) => {
         let page = 1;
         if (req.params.page) page = req.params.page;
         page = parseInt(page);
-        itemsPerPage = 4;
+        let itemsPerPage = 4;
 
         let follows = await Follow.find({ "user": currentUser }).select('followed');
         if (follows.length === 0) throw new Error('Hubo un error obteniendo la lista de seguidos');
@@ -231,11 +231,17 @@ const getFeed = async (req, res) => {
             .paginate(page, itemsPerPage);
         if (publications.length === 0) throw new Error('La gente que sigues no ha publicado nada o hubo un error');
 
+        const total = await Publication.countDocuments({
+            user: { $in: followedIds }
+        });
+
+
         res.status(200).json({
             status: 'success',
             message: 'Publicaciones obtenidas correctamente para la feed',
             publicaciones: publications,
             follows: followedIds,
+            total: total,
         })
 
     } catch (error) {

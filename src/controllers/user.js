@@ -215,7 +215,7 @@ const getImgProfile = async (req, res) => {
         const file = req.params.file;
         if (!file) throw new Error('No se detecto un nombre de imagen');
 
-        const filePath = path.join(__dirname, "../uploads/avatars/" + file);
+        const filePath = path.resolve(__dirname, "..\\uploads\\avatars\\" + file);
         const exists = await fs.promises.stat(filePath);
         if (!exists) throw new Error('Archivo no encontrado');
 
