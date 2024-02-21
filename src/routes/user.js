@@ -14,6 +14,7 @@ router.get('/profileImg/:file', userController.getImgProfile);
 // Rutas POST
 router.post('/create', userController.createUser);
 router.post('/login', userController.login);
+router.post('/logout', auth.auth, userController.logout);
 router.post('/upload-image', [auth.auth, uploads.single("file0")], userController.uploadImg);
 // Rutas PUT
 router.put('/update', auth.auth, userController.updateUser);

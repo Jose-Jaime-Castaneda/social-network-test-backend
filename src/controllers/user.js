@@ -78,6 +78,24 @@ const login = async (req, res) => {
     }
 }
 
+const logout = async (req, res) => {
+    try {
+        const token = req.header('Authorization');
+        if(!token) throw new Error('No hay token proporsionado. La sesión fue cerrada.')
+
+        res.status(200).json({
+            status: 'Success',
+            message: 'Sesión cerrada',
+        })
+        
+    } catch (error) {
+        res.status(400).json({
+            status: 'Internal error',
+            message: error.message,
+        })
+    }
+}
+
 const getUserInfo = async (req, res) => {
     try {
         const id = req.params.id;
@@ -233,6 +251,7 @@ const getImgProfile = async (req, res) => {
 module.exports = {
     createUser,
     login,
+    logout,
     rutaPrueba,
     getUserInfo,
     getUserList,
