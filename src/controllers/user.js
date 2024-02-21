@@ -66,7 +66,8 @@ const login = async (req, res) => {
         res.status(200).json({
             status: 'success',
             message: validateUser.message,
-            token: token
+            token: token,
+            user: validateUser.user._id,
         })
 
     } catch (error) {
