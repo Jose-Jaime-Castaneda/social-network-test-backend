@@ -80,14 +80,18 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
-        const token = req.header('Authorization');
-        if(!token) throw new Error('No hay token proporsionado. La sesión fue cerrada.')
+        const userID = req.user.id;
+        const user = await User.findById(userID);
+        if(!user) throw new Error('No se encontro el usuario con ese ID');
+
+        user.isTokenRevoked = true;
+        await user.save();
 
         res.status(200).json({
             status: 'Success',
             message: 'Sesión cerrada',
         })
-        
+
     } catch (error) {
         res.status(400).json({
             status: 'Internal error',

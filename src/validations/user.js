@@ -52,6 +52,7 @@ const validateLogin = async (email, pwd) => {
     if (existingUser) {
         const existingPwd = await bcrypt.compare(pwd, existingUser.password);
         if (existingPwd) {
+            await User.updateOne({ _id: existingUser._id }, { isTokenRevoked: false });
             return {
                 status: 'success',
                 message: 'Usuario validado correctamente',

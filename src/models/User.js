@@ -28,6 +28,10 @@ const UserSchema = Schema({
         type: String,
         default: "default.png"
     },
+    isTokenRevoked: {
+        type: Boolean,
+        default: false,
+    },
     date: {
         type: Date,
         default: Date.now,
