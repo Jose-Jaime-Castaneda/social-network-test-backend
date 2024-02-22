@@ -21,10 +21,10 @@ const validateExistingUser = async (nick, email) => {
     const existingUser = await User.findOne({
         $or: [
             {
-                email: email.toLowerCase()
+                email: email
             },
             {
-                nick: nick.toLowerCase()
+                nick: nick
             },
         ]
     }).exec();
