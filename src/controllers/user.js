@@ -83,7 +83,7 @@ const logout = async (req, res) => {
     try {
         const userID = req.user.id;
         const user = await User.findById(userID);
-        if(!user) throw new Error('No se encontro el usuario con ese ID');
+        if (!user) throw new Error('No se encontro el usuario con ese ID');
 
         user.isTokenRevoked = true;
         await user.save();
