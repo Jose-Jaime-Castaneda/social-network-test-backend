@@ -114,15 +114,13 @@ const getUserInfo = async (req, res) => {
 
 
         res.status(200).json({
-            status: 'success',
-            message: 'Usuario obtenido correctamente',
+            status: 'Usuario obtenido correctamente',
             user: user_to_get,
         })
 
     } catch (error) {
         res.status(400).json({
-            status: 'error',
-            message: 'Hubo un error obteniendo la información del perfil',
+            status: 'Hubo un error obteniendo la información del perfil',
             error: error.message,
         })
     }
